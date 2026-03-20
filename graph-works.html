@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph Works | Dr. Ranjidha Rajan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --cream: #faf7f2;
+    --gold: #c9963b;
+    --gold-light: #e8c97a;
+    --teal: #2d7d8a;
+    --teal-light: #4aa3b2;
+    --rose: #c4614a;
+    --muted: #6b6b7b;
+    --border: #e0dbd0;
+    --nav-h: 72px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); line-height: 1.7; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h); background: rgba(250,247,242,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 48px;
+  }
+  .nav-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+  .nav-brand span { color: var(--gold); }
+  .nav-back { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+  .nav-back:hover { color: var(--teal); }
+
+  /* HERO */
+  .page-hero {
+    padding-top: calc(var(--nav-h) + 60px);
+    padding-bottom: 60px;
+    background: linear-gradient(135deg, var(--ink) 0%, #2d4a6e 100%);
+    color: white; text-align: center; position: relative; overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(45,125,138,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(201,150,59,0.2) 0%, transparent 60%);
+  }
+  .page-hero .container { position: relative; }
+  .page-hero .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold-light); margin-bottom: 12px; }
+  .page-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 16px; }
+  .page-hero h1 em { color: var(--gold-light); font-style: italic; }
+  .page-hero p { color: rgba(255,255,255,0.7); font-size: 1.05rem; max-width: 560px; margin: 0 auto 32px; }
+
+  .btn-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: white; border: none; cursor: pointer;
+    padding: 14px 32px; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-add:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,150,59,0.4); }
+
+  /* FILTERS */
+  .filters-bar { padding: 32px 0; border-bottom: 1px solid var(--border); background: white; }
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .filter-btn {
+    padding: 8px 20px; border: 1.5px solid var(--border); border-radius: 100px;
+    background: white; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    color: var(--muted); cursor: pointer; transition: all 0.2s; font-weight: 500;
+  }
+  .filter-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .filter-btn.active { background: var(--teal); color: white; border-color: var(--teal); }
+  .search-wrap { margin-left: auto; }
+  .search-wrap input {
+    padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--ink);
+    background: var(--cream); outline: none; width: 220px;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--teal); }
+
+  /* GALLERY */
+  .gallery { padding: 48px 0 80px; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 28px;
+  }
+  .work-card {
+    background: white; border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--border); transition: all 0.25s;
+    animation: fadeIn 0.4s ease both;
+  }
+  .work-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.1); transform: translateY(-5px); }
+  .work-card.hidden { display: none; }
+
+  .work-image {
+    width: 100%; height: 220px; object-fit: cover;
+    background: linear-gradient(135deg, #e8f4f6, #f0ede6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; color: var(--muted); position: relative; overflow: hidden;
+  }
+  .work-image img { width: 100%; height: 100%; object-fit: cover; }
+  .work-image .chart-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px;
+  }
+  .work-image .chart-placeholder svg { opacity: 0.4; }
+  .work-type-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(0,0,0,0.6); color: white; font-size: 0.7rem;
+    padding: 4px 10px; border-radius: 100px; backdrop-filter: blur(8px);
+    font-weight: 500; letter-spacing: 0.04em;
+  }
+
+  .work-body { padding: 22px 24px 20px; }
+  .work-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tag {
+    font-size: 0.72rem; padding: 3px 10px; border-radius: 100px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .tag-network { background: rgba(45,125,138,0.1); color: var(--teal); }
+  .tag-bar { background: rgba(201,150,59,0.1); color: var(--gold); }
+  .tag-scatter { background: rgba(196,97,74,0.1); color: var(--rose); }
+  .tag-nlp { background: rgba(107,107,123,0.1); color: var(--muted); }
+  .tag-ml { background: rgba(45,100,138,0.1); color: #2d648a; }
+  .tag-dashboard { background: rgba(100,138,45,0.1); color: #4a6828; }
+  .tag-edu { background: rgba(138,45,125,0.1); color: #8a2d7d; }
+
+  .work-body h3 { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; line-height: 1.4; }
+  .work-body p { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+  .work-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .work-date { font-size: 0.75rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .work-actions { display: flex; gap: 8px; }
+  .work-btn { padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .work-btn-primary { background: var(--teal); color: white; }
+  .work-btn-primary:hover { background: var(--teal-light); }
+  .work-btn-danger { background: rgba(196,97,74,0.1); color: var(--rose); }
+  .work-btn-danger:hover { background: rgba(196,97,74,0.2); }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 80px 24px; }
+  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink); margin-bottom: 12px; }
+  .empty-state p { color: var(--muted); margin-bottom: 24px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: 20px; width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s ease;
+  }
+  .modal-header { padding: 28px 32px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; }
+  .modal-body { padding: 28px 32px 32px; }
+
+  .form-group { margin-bottom: 22px; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.93rem;
+    color: var(--ink); background: var(--cream); outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--teal); background: white; }
+  .form-group textarea { min-height: 100px; resize: vertical; }
+  .form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 5px; }
+
+  .tags-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag-check { display: none; }
+  .tag-check + label {
+    cursor: pointer; font-size: 0.75rem; padding: 5px 12px; border-radius: 100px;
+    border: 1.5px solid var(--border); color: var(--muted); font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.15s;
+  }
+  .tag-check:checked + label { background: var(--teal); color: white; border-color: var(--teal); }
+
+  .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px; }
+  .btn-cancel { padding: 11px 24px; border: 1.5px solid var(--border); border-radius: 8px; background: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.93rem; color: var(--muted); }
+  .btn-cancel:hover { border-color: var(--muted); }
+  .btn-save { padding: 11px 28px; background: var(--teal); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.93rem; font-weight: 600; transition: background 0.2s; }
+  .btn-save:hover { background: var(--teal-light); }
+
+  /* Image preview */
+  .image-preview { margin-top: 10px; width: 100%; height: 180px; border-radius: 8px; border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--cream); }
+  .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .image-preview .placeholder { color: var(--muted); font-size: 0.85rem; text-align: center; }
+
+  /* CONTAINER */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+
+  footer { background: #0f0f1e; color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; }
+  footer a { color: var(--gold-light); text-decoration: none; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .container { padding: 0 20px; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .filters { gap: 8px; }
+    .search-wrap { margin-left: 0; width: 100%; }
+    .search-wrap input { width: 100%; }
+    .modal-body { padding: 20px; }
+    .modal-header { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">Dr. Ranjidha <span>Rajan</span></a>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="container">
+    <p class="label">Data Visualization Research</p>
+    <h1>Graph <em>Works</em> Gallery</h1>
+    <p>A living showcase of data visualizations, network graphs, and research outputs — from student research to published work.</p>
+    <button class="btn-add" onclick="openModal()">+ Add New Work</button>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <div class="container">
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterWorks('all', this)">All Works</button>
+      <button class="filter-btn" onclick="filterWorks('network', this)">Network Graphs</button>
+      <button class="filter-btn" onclick="filterWorks('bar', this)">Bar / Chart</button>
+      <button class="filter-btn" onclick="filterWorks('scatter', this)">Scatter / Cluster</button>
+      <button class="filter-btn" onclick="filterWorks('nlp', this)">NLP / Text</button>
+      <button class="filter-btn" onclick="filterWorks('ml', this)">Machine Learning</button>
+      <button class="filter-btn" onclick="filterWorks('dashboard', this)">Dashboards</button>
+      <button class="filter-btn" onclick="filterWorks('edu', this)">Education</button>
+      <div class="search-wrap">
+        <input type="text" placeholder="🔍 Search works..." oninput="searchWorks(this.value)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section class="gallery">
+  <div class="container">
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- Seed cards -->
+      <div class="work-card" data-tags="network,edu" data-title="Semantic Similarity Network – Discussion Board">
+        <div class="work-image" style="background: linear-gradient(135deg, #e8f4f6, #d0ecf0);">
+          <div class="chart-placeholder">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="20" r="8" fill="#2d7d8a" opacity="0.7"/>
+              <circle cx="15" cy="55" r="6" fill="#4aa3b2" opacity="0.7"/>
+              <circle cx="65" cy="55" r="6" fill="#2d7d8a" opacity="0.7"/>
+              <circle cx="40" cy="65" r="5" fill="#c9963b" opacity="0.7"/>
+              <line x1="40" y1="28" x2="15" y2="49" stroke="#2d7d8a" stroke-width="1.5" opacity="0.5"/>
+              <line x1="40" y1="28" x2="65" y2="49" stroke="#2d7d8a" stroke-width="1.5" opacity="0.5"/>
+              <line x1="21" y1="55" x2="35" y2="62" stroke="#c9963b" stroke-width="1.5" opacity="0.5"/>
+              <line x1="59" y1="55" x2="45" y2="62" stroke="#c9963b" stroke-width="1.5" opacity="0.5"/>
+            </svg>
+            Network Visualization
+          </div>
+          <span class="work-type-badge">Network Graph</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-network">Network</span>
+            <span class="tag tag-nlp">NLP</span>
+            <span class="tag tag-edu">Education</span>
+          </div>
+          <h3>Semantic Similarity Network – Discussion Board</h3>
+          <p>Visualizing semantic relationships between student discussion posts using LSTM models and latent semantic analysis. Student research by Ashley Aguilar.</p>
+          <div class="work-meta">
+            <span class="work-date">2022–2023</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-card" data-tags="scatter,ml" data-title="PCA vs t-SNE – Social Network Clustering">
+        <div class="work-image" style="background: linear-gradient(135deg, #f6ece8, #f0e0dc);">
+          <div class="chart-placeholder">
+            <svg width="80" height="70" viewBox="0 0 80 70">
+              <circle cx="20" cy="20" r="4" fill="#c4614a" opacity="0.8"/>
+              <circle cx="28" cy="15" r="3" fill="#c4614a" opacity="0.6"/>
+              <circle cx="16" cy="30" r="3.5" fill="#c4614a" opacity="0.7"/>
+              <circle cx="55" cy="45" r="4" fill="#2d7d8a" opacity="0.8"/>
+              <circle cx="63" cy="50" r="3" fill="#2d7d8a" opacity="0.6"/>
+              <circle cx="50" cy="55" r="3.5" fill="#2d7d8a" opacity="0.7"/>
+              <circle cx="38" cy="35" r="4" fill="#c9963b" opacity="0.8"/>
+              <circle cx="44" cy="28" r="3" fill="#c9963b" opacity="0.6"/>
+            </svg>
+            Cluster Scatter Plot
+          </div>
+          <span class="work-type-badge">Scatter / Cluster</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-scatter">Scatter</span>
+            <span class="tag tag-ml">ML</span>
+            <span class="tag tag-network">Network</span>
+          </div>
+          <h3>PCA vs t-SNE – STEM Social Network Clustering</h3>
+          <p>Comparing PCA and t-SNE dimensionality reduction for visualizing social network clusters in a real-world STEM collaboration dataset. Student research by Elicia Perez (2024–2025).</p>
+          <div class="work-meta">
+            <span class="work-date">2024–2025</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-card" data-tags="network,edu" data-title="Discourse Coherence Visualization">
+        <div class="work-image" style="background: linear-gradient(135deg, #e8eef6, #d8e8f5);">
+          <div class="chart-placeholder">
+            <svg width="90" height="60" viewBox="0 0 90 60">
+              <rect x="5" y="10" width="16" height="40" rx="2" fill="#2d7d8a" opacity="0.7"/>
+              <rect x="25" y="20" width="16" height="30" rx="2" fill="#4aa3b2" opacity="0.7"/>
+              <rect x="45" y="5" width="16" height="45" rx="2" fill="#2d7d8a" opacity="0.7"/>
+              <rect x="65" y="25" width="16" height="25" rx="2" fill="#c9963b" opacity="0.7"/>
+              <polyline points="13,10 33,20 53,5 73,25" fill="none" stroke="#c9963b" stroke-width="2" stroke-dasharray="4,2" opacity="0.6"/>
+            </svg>
+            Discourse Coherence Chart
+          </div>
+          <span class="work-type-badge">Bar / NLP</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-nlp">NLP</span>
+            <span class="tag tag-bar">Bar</span>
+            <span class="tag tag-edu">Education</span>
+          </div>
+          <h3>Discourse Coherence Visualization in Online Discussion Boards</h3>
+          <p>ML-powered visualization measuring logical reliability and discourse coherence using CoI framework. Student research by Edom Eshete.</p>
+          <div class="work-meta">
+            <span class="work-date">2022–2023</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-card" data-tags="ml,scatter" data-title="Epistemic Network Visualization – Social Presence">
+        <div class="work-image" style="background: linear-gradient(135deg, #f0e8f6, #e8d8f5);">
+          <div class="chart-placeholder">
+            <svg width="80" height="70" viewBox="0 0 80 70">
+              <ellipse cx="40" cy="35" rx="30" ry="25" fill="none" stroke="#8a2d7d" stroke-width="1.5" opacity="0.3"/>
+              <ellipse cx="30" cy="30" rx="18" ry="15" fill="none" stroke="#2d7d8a" stroke-width="1.5" opacity="0.3"/>
+              <circle cx="25" cy="25" r="4" fill="#8a2d7d" opacity="0.7"/>
+              <circle cx="42" cy="20" r="3" fill="#2d7d8a" opacity="0.7"/>
+              <circle cx="55" cy="40" r="3.5" fill="#c9963b" opacity="0.7"/>
+              <circle cx="35" cy="48" r="3" fill="#8a2d7d" opacity="0.5"/>
+              <line x1="25" y1="25" x2="42" y2="20" stroke="#8a2d7d" stroke-width="1" opacity="0.4"/>
+              <line x1="42" y1="20" x2="55" y2="40" stroke="#2d7d8a" stroke-width="1" opacity="0.4"/>
+            </svg>
+            Epistemic Network
+          </div>
+          <span class="work-type-badge">Network</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-network">Network</span>
+            <span class="tag tag-edu">Education</span>
+            <span class="tag tag-nlp">NLP</span>
+          </div>
+          <h3>Epistemic Network Visualization – Social Presence in Online Discussions</h3>
+          <p>Visualizing social presence evolution using Epistemic Network Analysis. Based on EdD dissertation research combining CoI theory and Social Presence Model.</p>
+          <div class="work-meta">
+            <span class="work-date">2023</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-card" data-tags="bar,ml" data-title="Raspberry Pi Cluster Performance">
+        <div class="work-image" style="background: linear-gradient(135deg, #eef6e8, #dff0d8);">
+          <div class="chart-placeholder">
+            <svg width="90" height="60" viewBox="0 0 90 60">
+              <g opacity="0.7">
+                <rect x="5" y="30" width="12" height="24" rx="2" fill="#4a6828"/>
+                <rect x="20" y="18" width="12" height="36" rx="2" fill="#4a6828"/>
+                <rect x="35" y="8" width="12" height="46" rx="2" fill="#4a6828"/>
+                <rect x="50" y="12" width="12" height="42" rx="2" fill="#c9963b"/>
+                <rect x="65" y="22" width="12" height="32" rx="2" fill="#c4614a"/>
+              </g>
+              <text x="5" y="58" font-size="6" fill="#6b6b7b">1-core</text>
+              <text x="20" y="58" font-size="6" fill="#6b6b7b">2-core</text>
+              <text x="35" y="58" font-size="6" fill="#6b6b7b">4-core</text>
+              <text x="50" y="58" font-size="6" fill="#6b6b7b">8-core</text>
+              <text x="65" y="58" font-size="6" fill="#6b6b7b">16-core</text>
+            </svg>
+            Performance Bar Chart
+          </div>
+          <span class="work-type-badge">Bar Chart</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-bar">Bar</span>
+            <span class="tag tag-ml">ML</span>
+          </div>
+          <h3>Raspberry Pi Cluster Scalability & Core Configuration Analysis</h3>
+          <p>Performance analysis of Raspberry Pi 4B clusters in distributed computing, examining workload distribution and message-passing overhead. Student research by Vincent Cordova.</p>
+          <div class="work-meta">
+            <span class="work-date">2023–2024</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-card" data-tags="dashboard,ml" data-title="Generative AI – Student Perception Dashboard">
+        <div class="work-image" style="background: linear-gradient(135deg, #f6f0e8, #f5e8d0);">
+          <div class="chart-placeholder">
+            <svg width="90" height="65" viewBox="0 0 90 65">
+              <rect x="5" y="5" width="38" height="25" rx="3" fill="#c9963b" opacity="0.15" stroke="#c9963b" stroke-width="1"/>
+              <rect x="47" y="5" width="38" height="25" rx="3" fill="#2d7d8a" opacity="0.15" stroke="#2d7d8a" stroke-width="1"/>
+              <rect x="5" y="35" width="80" height="22" rx="3" fill="#1a1a2e" opacity="0.05" stroke="#1a1a2e" stroke-width="1"/>
+              <circle cx="24" cy="17" r="8" fill="none" stroke="#c9963b" stroke-width="3" stroke-dasharray="30 20" opacity="0.7"/>
+              <rect x="52" y="10" width="28" height="4" rx="2" fill="#2d7d8a" opacity="0.5"/>
+              <rect x="52" y="17" width="20" height="4" rx="2" fill="#2d7d8a" opacity="0.3"/>
+              <rect x="52" y="24" width="24" height="4" rx="2" fill="#2d7d8a" opacity="0.4"/>
+            </svg>
+            Dashboard Layout
+          </div>
+          <span class="work-type-badge">Dashboard</span>
+        </div>
+        <div class="work-body">
+          <div class="work-tags">
+            <span class="tag tag-dashboard">Dashboard</span>
+            <span class="tag tag-edu">Education</span>
+            <span class="tag tag-ml">ML</span>
+          </div>
+          <h3>Generative AI Student Perception Dashboard – Cross-Disciplinary Analysis</h3>
+          <p>Data visualizations from the SoTL Faculty Learning Community study on student perceptions and performance with Generative AI across multiple disciplines at MSU Denver.</p>
+          <div class="work-meta">
+            <span class="work-date">2024</span>
+            <div class="work-actions">
+              <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state (hidden when cards exist) -->
+    <div class="empty-state" id="empty-state" style="display:none">
+      <h3>No Works Found</h3>
+      <p>Try a different filter or search term, or add your first graph work.</p>
+      <button class="btn-add" onclick="openModal()">+ Add New Work</button>
+    </div>
+  </div>
+</section>
+
+<!-- ADD WORK MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add New Graph Work</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" id="work-title" placeholder="e.g., Semantic Network of Student Discussion Posts">
+      </div>
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea id="work-desc" placeholder="Describe the visualization, methods used, and key findings..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Year / Date</label>
+        <input type="text" id="work-date" placeholder="e.g., 2024 or 2024–2025">
+      </div>
+      <div class="form-group">
+        <label>Image URL <span style="font-weight:300">(optional — paste a link to your visualization image)</span></label>
+        <input type="url" id="work-image" placeholder="https://..." oninput="previewImage(this.value)">
+        <div class="image-preview" id="image-preview">
+          <div class="placeholder">Image preview will appear here</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Visualization Type</label>
+        <select id="work-viztype">
+          <option value="">Select a type...</option>
+          <option value="Network Graph">Network Graph</option>
+          <option value="Bar Chart">Bar Chart</option>
+          <option value="Scatter Plot">Scatter Plot</option>
+          <option value="Dashboard">Dashboard</option>
+          <option value="Heatmap">Heatmap</option>
+          <option value="Line Chart">Line Chart</option>
+          <option value="Epistemic Network">Epistemic Network</option>
+          <option value="Word Cloud">Word Cloud</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <div class="tags-selector">
+          <input type="checkbox" class="tag-check" id="tag-network" value="network">
+          <label for="tag-network">Network</label>
+          <input type="checkbox" class="tag-check" id="tag-bar" value="bar">
+          <label for="tag-bar">Bar</label>
+          <input type="checkbox" class="tag-check" id="tag-scatter" value="scatter">
+          <label for="tag-scatter">Scatter</label>
+          <input type="checkbox" class="tag-check" id="tag-nlp" value="nlp">
+          <label for="tag-nlp">NLP</label>
+          <input type="checkbox" class="tag-check" id="tag-ml" value="ml">
+          <label for="tag-ml">ML</label>
+          <input type="checkbox" class="tag-check" id="tag-dashboard" value="dashboard">
+          <label for="tag-dashboard">Dashboard</label>
+          <input type="checkbox" class="tag-check" id="tag-edu" value="edu">
+          <label for="tag-edu">Education</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Link / URL <span style="font-weight:300">(optional)</span></label>
+        <input type="url" id="work-link" placeholder="https://... (paper, repo, or live demo)">
+      </div>
+      <div class="form-group">
+        <label>Student Researcher <span style="font-weight:300">(if applicable)</span></label>
+        <input type="text" id="work-student" placeholder="e.g., Elicia Perez">
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="saveWork()">Save Work</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom:12px"><strong>Dr. Ranjidha Rajan</strong> · Graph Works Gallery</p>
+  <p><a href="index.html">← Return to Main Portfolio</a></p>
+  <p style="margin-top: 16px; font-size: 0.75rem; opacity: 0.5;">Works added here are saved in your browser. Export the HTML to persist them.</p>
+</footer>
+
+<script>
+// ---- DATA STORE (localStorage as persistence) ----
+const STORE_KEY = 'ranjidha_graph_works';
+
+function loadWorks() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; }
+}
+function saveWorks(works) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(works));
+}
+
+// ---- MODAL ----
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  resetForm();
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+function resetForm() {
+  ['work-title','work-desc','work-date','work-image','work-link','work-student'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('work-viztype').value = '';
+  document.querySelectorAll('.tag-check').forEach(cb => cb.checked = false);
+  document.getElementById('image-preview').innerHTML = '<div class="placeholder">Image preview will appear here</div>';
+}
+
+function previewImage(url) {
+  const preview = document.getElementById('image-preview');
+  if (url) {
+    preview.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<div class=placeholder>Invalid image URL</div>'">`;
+  } else {
+    preview.innerHTML = '<div class="placeholder">Image preview will appear here</div>';
+  }
+}
+
+// ---- SAVE ----
+function saveWork() {
+  const title = document.getElementById('work-title').value.trim();
+  const desc = document.getElementById('work-desc').value.trim();
+  if (!title || !desc) { alert('Please fill in the title and description.'); return; }
+
+  const tags = Array.from(document.querySelectorAll('.tag-check:checked')).map(cb => cb.value);
+  const work = {
+    id: Date.now(),
+    title,
+    desc,
+    date: document.getElementById('work-date').value.trim() || new Date().getFullYear().toString(),
+    imageUrl: document.getElementById('work-image').value.trim(),
+    vizType: document.getElementById('work-viztype').value,
+    tags,
+    link: document.getElementById('work-link').value.trim(),
+    student: document.getElementById('work-student').value.trim(),
+  };
+
+  const works = loadWorks();
+  works.unshift(work);
+  saveWorks(works);
+  renderCard(work, true);
+  closeModal();
+  checkEmpty();
+}
+
+// ---- RENDER ----
+function getTagHtml(tag) {
+  const map = { network:'tag-network', bar:'tag-bar', scatter:'tag-scatter', nlp:'tag-nlp', ml:'tag-ml', dashboard:'tag-dashboard', edu:'tag-edu' };
+  return `<span class="tag ${map[tag] || ''}">${tag}</span>`;
+}
+
+function renderCard(work, prepend = false) {
+  const grid = document.getElementById('gallery-grid');
+  const imgHtml = work.imageUrl
+    ? `<img src="${work.imageUrl}" onerror="this.style.display='none'">`
+    : getSvgPlaceholder(work.tags[0]);
+
+  const card = document.createElement('div');
+  card.className = 'work-card';
+  card.dataset.tags = work.tags.join(',');
+  card.dataset.title = work.title.toLowerCase();
+  card.dataset.id = work.id;
+  card.innerHTML = `
+    <div class="work-image" style="background:${getBgGradient(work.tags[0])};">
+      ${imgHtml}
+      ${work.vizType ? `<span class="work-type-badge">${work.vizType}</span>` : ''}
+    </div>
+    <div class="work-body">
+      <div class="work-tags">${work.tags.map(getTagHtml).join('')}</div>
+      <h3>${escHtml(work.title)}</h3>
+      <p>${escHtml(work.desc)}${work.student ? ` <em>— ${escHtml(work.student)}</em>` : ''}</p>
+      <div class="work-meta">
+        <span class="work-date">${escHtml(work.date)}</span>
+        <div class="work-actions">
+          ${work.link ? `<a href="${escHtml(work.link)}" target="_blank" class="work-btn work-btn-primary">View ↗</a>` : ''}
+          <button class="work-btn work-btn-danger" onclick="deleteWork(this)">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  if (prepend) grid.prepend(card); else grid.appendChild(card);
+}
+
+function getBgGradient(tag) {
+  const m = { network:'linear-gradient(135deg,#e8f4f6,#d0ecf0)', bar:'linear-gradient(135deg,#eef6e8,#dff0d8)', scatter:'linear-gradient(135deg,#f6ece8,#f0e0dc)', nlp:'linear-gradient(135deg,#f0ede6,#e8e0d6)', ml:'linear-gradient(135deg,#e8eef6,#d8e8f5)', dashboard:'linear-gradient(135deg,#f6f0e8,#f5e8d0)', edu:'linear-gradient(135deg,#f0e8f6,#e8d8f5)' };
+  return m[tag] || 'linear-gradient(135deg,#f0ede6,#e8dfd6)';
+}
+
+function getSvgPlaceholder(tag) {
+  return `<div class="chart-placeholder"><svg width="64" height="64" viewBox="0 0 64 64"><rect x="8" y="20" width="10" height="36" rx="2" fill="#2d7d8a" opacity="0.5"/><rect x="22" y="12" width="10" height="44" rx="2" fill="#4aa3b2" opacity="0.5"/><rect x="36" y="28" width="10" height="28" rx="2" fill="#c9963b" opacity="0.5"/><rect x="50" y="16" width="10" height="40" rx="2" fill="#2d7d8a" opacity="0.4"/></svg><span>Visualization</span></div>`;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ---- DELETE ----
+function deleteWork(btn) {
+  if (!confirm('Delete this work?')) return;
+  const card = btn.closest('.work-card');
+  const id = parseInt(card.dataset.id);
+  card.style.opacity = '0'; card.style.transform = 'scale(0.95)'; card.style.transition = 'all 0.3s';
+  setTimeout(() => {
+    card.remove();
+    if (id) {
+      const works = loadWorks().filter(w => w.id !== id);
+      saveWorks(works);
+    }
+    checkEmpty();
+  }, 300);
+}
+
+// ---- FILTER ----
+let activeFilter = 'all';
+let searchQuery = '';
+
+function filterWorks(tag, btn) {
+  activeFilter = tag;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function searchWorks(q) {
+  searchQuery = q.toLowerCase();
+  applyFilters();
+}
+
+function applyFilters() {
+  let visible = 0;
+  document.querySelectorAll('.work-card').forEach(card => {
+    const tags = card.dataset.tags || '';
+    const title = (card.dataset.title || '').toLowerCase();
+    const bodyText = card.querySelector('.work-body')?.innerText?.toLowerCase() || '';
+    const matchFilter = activeFilter === 'all' || tags.split(',').includes(activeFilter);
+    const matchSearch = !searchQuery || title.includes(searchQuery) || bodyText.includes(searchQuery);
+    const show = matchFilter && matchSearch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+}
+
+function checkEmpty() {
+  const visible = document.querySelectorAll('.work-card:not(.hidden)').length;
+  document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+}
+
+// ---- INIT: load persisted works ----
+window.addEventListener('DOMContentLoaded', () => {
+  const stored = loadWorks();
+  stored.forEach(w => renderCard(w, false));
+});
+</script>
+</body>
+</html>
