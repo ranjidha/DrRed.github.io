@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Ranjidha Rajan | Computer Science | MSU Denver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --cream: #faf7f2;
+    --gold: #c9963b;
+    --gold-light: #e8c97a;
+    --teal: #2d7d8a;
+    --teal-light: #4aa3b2;
+    --rose: #c4614a;
+    --muted: #6b6b7b;
+    --border: #e0dbd0;
+    --card-bg: #ffffff;
+    --nav-h: 72px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); line-height: 1.7; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+  }
+  .nav-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-brand span { color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--teal); }
+  .nav-links a.cta { color: var(--gold); border: 1px solid var(--gold); border-radius: 4px; padding: 6px 16px; }
+  .nav-links a.cta:hover { background: var(--gold); color: white; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding-top: var(--nav-h);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 48px; padding-right: 48px;
+    gap: 64px;
+  }
+  .hero-text { animation: fadeUp 0.9s ease both; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,150,59,0.1); border: 1px solid rgba(201,150,59,0.3);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 0.78rem; font-weight: 500; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.1; color: var(--ink); margin-bottom: 12px; }
+  h1 em { font-style: italic; color: var(--teal); }
+  .hero-role { font-size: 1.05rem; color: var(--muted); margin-bottom: 28px; font-weight: 300; }
+  .hero-role strong { color: var(--ink); font-weight: 500; }
+  .hero-summary { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 480px; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--teal); color: white; text-decoration: none;
+    padding: 13px 28px; border-radius: 6px; font-weight: 500; font-size: 0.92rem;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1.5px solid var(--ink); color: var(--ink); text-decoration: none;
+    padding: 12px 28px; border-radius: 6px; font-weight: 500; font-size: 0.92rem;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+  /* HERO IMAGE */
+  .hero-visual { animation: fadeUp 0.9s 0.2s ease both; display: flex; justify-content: center; align-items: center; }
+  .hero-photo-wrap {
+    position: relative; width: 380px; height: 420px;
+  }
+  .hero-photo-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(45,125,138,0.15), rgba(201,150,59,0.15));
+    border-radius: 40% 60% 55% 45% / 40% 45% 55% 60%;
+    animation: morphBlob 8s ease-in-out infinite;
+  }
+  .hero-photo {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 340px; height: 380px; border-radius: 32px;
+    object-fit: cover; object-position: top;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+    border: 4px solid white;
+  }
+  .hero-stats {
+    position: absolute; bottom: -20px; left: -20px;
+    background: white; border-radius: 16px; padding: 16px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: flex; gap: 24px;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--teal); font-weight: 700; display: block; }
+  .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .award-badge {
+    position: absolute; top: -10px; right: -20px;
+    background: var(--gold); color: white; border-radius: 12px; padding: 10px 14px;
+    font-size: 0.72rem; font-weight: 600; text-align: center; line-height: 1.3;
+    box-shadow: 0 4px 16px rgba(201,150,59,0.35);
+  }
+
+  /* SECTION BASE */
+  section { padding: 96px 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+  h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--ink); margin-bottom: 16px; }
+  h2 em { font-style: italic; color: var(--teal); }
+  .section-intro { font-size: 1.05rem; color: var(--muted); max-width: 560px; line-height: 1.8; margin-bottom: 56px; }
+
+  /* ABOUT STRIP */
+  .about-strip { background: var(--ink); color: white; padding: 56px 0; }
+  .about-grid { display: grid; grid-template-columns: 1fr 2px 1fr 2px 1fr; gap: 40px; align-items: start; }
+  .about-divider { background: rgba(255,255,255,0.1); }
+  .about-item h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--gold-light); margin-bottom: 8px; }
+  .about-item p { color: rgba(255,255,255,0.7); font-size: 0.93rem; line-height: 1.7; }
+  .about-item ul { color: rgba(255,255,255,0.7); font-size: 0.9rem; list-style: none; }
+  .about-item ul li { padding: 4px 0; display: flex; align-items: start; gap: 8px; }
+  .about-item ul li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+  /* TEACHING */
+  .teaching-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .course-card {
+    background: white; border-radius: 16px; padding: 28px;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .course-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+  }
+  .course-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.1); transform: translateY(-4px); }
+  .course-tag { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--teal); background: rgba(45,125,138,0.08); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 12px; }
+  .course-card h3 { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .course-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+  .pedagogy-note { margin-top: 12px; padding: 10px 12px; background: rgba(201,150,59,0.06); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 0.82rem; color: var(--ink); line-height: 1.5; }
+  .pedagogy-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+
+  /* RESEARCH */
+  .research-section { background: linear-gradient(180deg, var(--cream) 0%, #f0ede6 100%); }
+  .pub-list { display: flex; flex-direction: column; gap: 20px; }
+  .pub-item {
+    background: white; border-radius: 12px; padding: 24px 28px;
+    border: 1px solid var(--border);
+    display: grid; grid-template-columns: auto 1fr; gap: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .pub-item:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+  .pub-year { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); white-space: nowrap; padding-top: 3px; }
+  .pub-type { display: inline-block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 100px; margin-bottom: 8px; font-weight: 600; }
+  .pub-type.journal { background: rgba(196,97,74,0.1); color: var(--rose); }
+  .pub-type.conference { background: rgba(45,125,138,0.1); color: var(--teal); }
+  .pub-type.chapter { background: rgba(201,150,59,0.1); color: var(--gold); }
+  .pub-item h3 { font-size: 0.97rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: 1.4; }
+  .pub-item p { font-size: 0.87rem; color: var(--muted); line-height: 1.5; }
+  .pub-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.82rem; color: var(--teal); text-decoration: none; margin-top: 8px; }
+  .pub-link:hover { text-decoration: underline; }
+
+  .research-projects { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 56px; }
+  .project-card {
+    background: white; border-radius: 16px; padding: 28px;
+    border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .project-card::after {
+    content: ''; position: absolute; bottom: 0; right: 0;
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, transparent 50%, rgba(45,125,138,0.05) 50%);
+  }
+  .project-status { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; padding: 3px 10px; border-radius: 100px; display: inline-block; margin-bottom: 14px; }
+  .status-ongoing { background: rgba(45,125,138,0.1); color: var(--teal); }
+  .status-writing { background: rgba(201,150,59,0.1); color: var(--gold); }
+  .status-planning { background: rgba(196,97,74,0.1); color: var(--rose); }
+  .project-card h3 { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 10px; line-height: 1.4; }
+  .project-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.65; }
+
+  /* GRANTS */
+  .grants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .grant-card {
+    background: white; border-radius: 12px; padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .grant-amount { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--teal); font-weight: 700; margin-bottom: 8px; }
+  .grant-card h3 { font-size: 0.93rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: 1.4; }
+  .grant-card p { font-size: 0.83rem; color: var(--muted); }
+  .grant-sponsor { font-size: 0.75rem; color: var(--gold); font-weight: 600; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* SERVICE */
+  .service-tabs { display: flex; gap: 4px; margin-bottom: 40px; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 4px; width: fit-content; }
+  .tab-btn { padding: 10px 24px; border: none; background: none; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+  .tab-btn.active { background: var(--teal); color: white; }
+  .service-content { display: none; }
+  .service-content.active { display: block; }
+  .service-list { display: flex; flex-direction: column; gap: 14px; }
+  .service-item { display: flex; gap: 16px; padding: 18px 22px; background: white; border: 1px solid var(--border); border-radius: 10px; align-items: start; }
+  .service-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .service-item h3 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .service-item p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .service-period { font-size: 0.75rem; color: var(--gold); font-weight: 500; margin-top: 4px; }
+
+  /* AWARDS */
+  .awards-section { background: var(--ink); color: white; }
+  .awards-section h2 { color: white; }
+  .awards-section .section-intro { color: rgba(255,255,255,0.6); }
+  .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .award-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px;
+    transition: background 0.2s;
+  }
+  .award-card:hover { background: rgba(255,255,255,0.08); }
+  .award-icon { font-size: 2rem; margin-bottom: 14px; }
+  .award-card h3 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 8px; }
+  .award-card p { font-size: 0.87rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .award-year { font-size: 0.75rem; color: var(--gold-light); font-weight: 600; margin-top: 12px; }
+
+  /* GRAPH PAGE NAV */
+  .page-link-strip { background: var(--teal); color: white; padding: 20px 0; text-align: center; }
+  .page-link-strip a { color: white; text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; }
+  .page-link-strip a:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer { background: #0f0f1e; color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; }
+  footer a { color: var(--gold-light); text-decoration: none; }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes morphBlob {
+    0%, 100% { border-radius: 40% 60% 55% 45% / 40% 45% 55% 60%; }
+    33% { border-radius: 55% 45% 40% 60% / 55% 60% 40% 45%; }
+    66% { border-radius: 45% 55% 60% 40% / 60% 40% 55% 45%; }
+  }
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { gap: 16px; }
+    .hero { grid-template-columns: 1fr; padding: 80px 24px 60px; text-align: center; }
+    .hero-visual { order: -1; }
+    .hero-photo-wrap { width: 280px; height: 300px; }
+    .hero-photo { width: 260px; height: 280px; }
+    .hero-stats { left: 0; }
+    .container { padding: 0 24px; }
+    .about-grid { grid-template-columns: 1fr; gap: 24px; }
+    .about-divider { display: none; }
+    .research-projects { grid-template-columns: 1fr; }
+    .pub-item { grid-template-columns: 1fr; }
+    .pub-year { display: none; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">Dr. Ranjidha <span>Rajan</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#teaching">Teaching</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#service">Service</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="graph-works.html" class="cta">Graph Works ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-badge">Assistant Professor · MSU Denver</div>
+    <h1>Ranjidha<br><em>Rajan</em></h1>
+    <p class="hero-role">Department of <strong>Computer Sciences</strong> · MSU Denver<br>PhD, Learning Analytics · EdD, National University</p>
+    <p class="hero-summary">Educator, researcher, and innovator at the intersection of AI, data science, and computer science education. Passionate about inquiry-based learning, open educational resources, and building inclusive STEM communities.</p>
+    <div class="hero-actions">
+      <a href="#research" class="btn-primary">View Research ↓</a>
+      <a href="graph-works.html" class="btn-outline">Graph Works Gallery ↗</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-bg"></div>
+      <img src="data:image/jpeg;base64,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" alt="Dr. Ranjidha Rajan" class="hero-photo">
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">7+</span><span class="stat-label">Years MSU</span></div>
+        <div class="stat"><span class="stat-num">6</span><span class="stat-label">Mentees</span></div>
+        <div class="stat"><span class="stat-num">6+</span><span class="stat-label">Grants</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT STRIP -->
+<div class="about-strip" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-item">
+        <h3>Education</h3>
+        <ul>
+          <li>EdD, Learning Analytics – National University (2023)</li>
+          <li>PG Diploma, Data Analysis – IIIT Bangalore (2018)</li>
+          <li>MS, Computer Science – Bharathiar University (2008)</li>
+          <li>BS, Physics & Instrumentation – MG University (2000)</li>
+        </ul>
+      </div>
+      <div class="about-divider"></div>
+      <div class="about-item">
+        <h3>Research Interests</h3>
+        <ul>
+          <li>Generative AI in Education</li>
+          <li>Learning Analytics & Data Mining</li>
+          <li>Inquiry-Based Learning</li>
+          <li>Open Educational Resources</li>
+          <li>Data Visualization</li>
+          <li>Natural Language Processing</li>
+        </ul>
+      </div>
+      <div class="about-divider"></div>
+      <div class="about-item">
+        <h3>Current Certifications</h3>
+        <ul>
+          <li>Applied Data Science – MIT (2025–Present)</li>
+          <li>Data Science Methods – UPenn (2025)</li>
+          <li>3C Computing Fellow – Duke University (2024–Present)</li>
+          <li>Creative Commons Certified Educator</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHING -->
+<section id="teaching">
+  <div class="container">
+    <p class="section-label">Scholarship of Teaching</p>
+    <h2>Teaching & <em>Courses</em></h2>
+    <p class="section-intro">Committed to innovative, student-centered pedagogy integrating AI tools, open educational resources, and inquiry-based learning frameworks.</p>
+
+    <div class="teaching-grid">
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 1050</span>
+        <h3>Computer Science 1</h3>
+        <p>Foundational programming concepts, computational thinking, and algorithm design for CS students.</p>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 2400 / 1400</span>
+        <h3>Computer Organization 1 & 2</h3>
+        <p>Digital logic, assembly language, memory systems, and computer architecture fundamentals.</p>
+        <div class="pedagogy-note"><div class="pedagogy-label">Innovation</div>Real-time simulations of computer clusters demonstrated by undergraduate research mentees.</div>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 3210</span>
+        <h3>Principles of Programming Languages</h3>
+        <p>Language paradigms, semantics, and type systems. Students build and evaluate code-generating AI bots.</p>
+        <div class="pedagogy-note"><div class="pedagogy-label">Innovation</div>Students write precise specifications and design structured AI prompts, developing critical AI literacy skills.</div>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 3600</span>
+        <h3>Operating Systems</h3>
+        <p>Process management, memory, file systems, and concurrency with real-world OS design principles.</p>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 3810</span>
+        <h3>Principles of Database Systems</h3>
+        <p>Relational models, SQL, normalization, transactions, and database design principles.</p>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 4360</span>
+        <h3>Senior Experience in CS (Capstone)</h3>
+        <p>Industry-sponsored capstone projects with real external stakeholders. Multiple students secured positions with partner organizations.</p>
+        <div class="pedagogy-note"><div class="pedagogy-label">Innovation</div>STAR Story method for individual accountability in team projects. Three industry-sponsored projects secured.</div>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 3013</span>
+        <h3>Mobile App Development</h3>
+        <p>Cross-platform mobile application design and development using modern frameworks.</p>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">CS 39AE</span>
+        <h3>Data Visualization</h3>
+        <p>Visual encoding, storytelling with data, accessible design, and rhetorical visualization techniques.</p>
+      </div>
+      <div class="course-card fade-in">
+        <span class="course-tag">Non-Credit</span>
+        <h3>Introduction to Machine Learning</h3>
+        <p>Designed for MSU Denver's Career Launchpad — accessible, practice-focused ML course for adult learners and professionals.</p>
+      </div>
+    </div>
+
+    <!-- Undergraduate Research -->
+    <div style="margin-top: 64px;">
+      <p class="section-label">Directed Student Learning</p>
+      <h2>Undergraduate <em>Research</em> Mentorship</h2>
+      <p class="section-intro">Mentoring students in cutting-edge research at the intersection of AI, data science, and education.</p>
+      <div class="teaching-grid">
+        <div class="course-card fade-in">
+          <span class="course-tag">2025–Present</span>
+          <h3>Evaluating RAG Models for Explainability</h3>
+          <p><em>Yujin Kim</em> — Evaluating RAG model performance across factual, conceptual, and reasoning-based question types for explainable AI systems.</p>
+        </div>
+        <div class="course-card fade-in">
+          <span class="course-tag">2024–2025</span>
+          <h3>Dimensionality Reduction for Social Network Clustering</h3>
+          <p><em>Elicia Perez</em> — Comparing PCA and t-SNE for visualizing social network clusters in a real-world STEM collaboration dataset.</p>
+        </div>
+        <div class="course-card fade-in">
+          <span class="course-tag">2024–2025</span>
+          <h3>Generative AI & Business Intelligence</h3>
+          <p><em>Urvi Pal</em> — Examining how generative AI enhances business intelligence through adaptive data visualization and automated analytic workflows.</p>
+        </div>
+        <div class="course-card fade-in">
+          <span class="course-tag">2023–2024</span>
+          <h3>Raspberry Pi Cluster Performance</h3>
+          <p><em>Vincent Cordova</em> — Exploring scalability of Raspberry Pi clusters in distributed computing environments.</p>
+        </div>
+        <div class="course-card fade-in">
+          <span class="course-tag">2022–2023</span>
+          <h3>Semantic Similarity in Discussion Boards</h3>
+          <p><em>Ashley Aguilar</em> — Using NLP and LSTM models to visualize semantic similarity in discussion board data for educational feedback.</p>
+        </div>
+        <div class="course-card fade-in">
+          <span class="course-tag">2022–2023</span>
+          <h3>Visualizing Discourse Coherence</h3>
+          <p><em>Edom Eshete</em> — Machine learning tool to visualize discourse coherence in online discussion boards using NLP.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research" class="research-section">
+  <div class="container">
+    <p class="section-label">Scholarship & Publications</p>
+    <h2>Research & <em>Publications</em></h2>
+    <p class="section-intro">Contributing to the scholarship of teaching and learning, AI in education, and computer science pedagogy through peer-reviewed publications and conference presentations.</p>
+
+    <div class="pub-list">
+      <div class="pub-item fade-in">
+        <span class="pub-year">2024</span>
+        <div>
+          <span class="pub-type conference">Conference Paper</span>
+          <h3>Ethical Integration in Computer Science Education: Leveraging Open Educational Resources and Generative Artificial Intelligence for Enhanced Learning</h3>
+          <p>Rajan, R. — IEEE/PPIG (VL/HCC 2024), Liverpool, UK. Examines innovative approach to teaching CS ethics through adapted OER within an Inquiry-Based Learning framework.</p>
+          <a href="https://conf.researchr.org/details/vlhcc-2024/vlhcc-2024-journal-first-presentations/9/Ethical-Integration-in-Computer-Science-Education-Leveraging-Open-Educational-Resour" class="pub-link" target="_blank">View Paper ↗</a>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2024</span>
+        <div>
+          <span class="pub-type conference">Conference Paper</span>
+          <h3>Generative AI as a Tool for Learning: Higher Education Student Perceptions and Performance across Disciplines</h3>
+          <p>Geinitz, S. R., Rajan, R., Peprah, K., Schmidt, K. C., Singh, S., Jay, S. M. — Springer. Results of a SoTL Faculty Learning Community on Generative AI adoption across disciplines.</p>
+          <a href="https://www.springerprofessional.de/en/lecture-notes-in-networks-and-systems/10076406" class="pub-link" target="_blank">View Paper ↗</a>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2021</span>
+        <div>
+          <span class="pub-type journal">Editor-Reviewed Journal</span>
+          <h3>Faculty Are Our Allies in Teaching Career Preparation and Readiness Skills</h3>
+          <p>McKinney, L., Sinley, R.C., Daughtrey, C., Ansburg, P., Rajan, R., et al. — NACE Journal, May 2021. Faculty perceptions on career preparation importance and practice at MSU Denver.</p>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2021</span>
+        <div>
+          <span class="pub-type conference">Conference Paper</span>
+          <h3>Who Should Teach Career Preparation and Career Readiness Skills?</h3>
+          <p>Ansburg, P., Daughtrey, C., Eaker, R.L., Lopez, J.R., McKinney, L., Meyer, J., Rajan, R., Sinley, R.C. — Marketing Educators' Association Conference Proceedings 2021.</p>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2022</span>
+        <div>
+          <span class="pub-type conference">Conference Paper</span>
+          <h3>Evaluating and Improving the Educational CPU Visual Simulator: A Sustainable Open Pedagogy Approach</h3>
+          <p>Cortinovis, R., Rajan, R. — PPIG 2022, Milton Keynes, UK. User evaluation of an educational CPU visual simulator in an Open Pedagogy/OER-enabled project.</p>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2017</span>
+        <div>
+          <span class="pub-type chapter">Book Chapter</span>
+          <h3>A Study on Mutual Information-Based Feature Selection in Classifiers</h3>
+          <p>Arundhathi, B., Athira, A., Rajan, R. — Advances in Intelligent Systems and Computing (pp. 479-486). Springer Singapore.</p>
+          <a href="https://doi.org/10.1007/978-981-10-3174-8_40" class="pub-link" target="_blank">DOI Link ↗</a>
+        </div>
+      </div>
+      <div class="pub-item fade-in">
+        <span class="pub-year">2023</span>
+        <div>
+          <span class="pub-type journal">Dissertation</span>
+          <h3>The Pragmatism of Evolving Social Presence in Online Discussion Forums</h3>
+          <p>Rajan, R. — EdD Dissertation, ProQuest. Explored faculty experiences using Community of Inquiry (CoI) theory and Social Presence Model with epistemic network visualization.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Research in Progress -->
+    <div style="margin-top: 56px;">
+      <p class="section-label">In Progress</p>
+      <h2>Current <em>Research</em></h2>
+      <div class="research-projects">
+        <div class="project-card fade-in">
+          <span class="project-status status-ongoing">Ongoing</span>
+          <h3>Scaffolding Data Questioning with Generative AI: Toward an AI-Augmented Inquiry-Based Learning (AI-IBL) Framework</h3>
+          <p>Investigating how Generative AI can support student inquiry in data visualization through the 5E cycle (Engage, Explore, Explain, Elaborate, Evaluate), evaluating question quality and inquiry depth.</p>
+        </div>
+        <div class="project-card fade-in">
+          <span class="project-status status-ongoing">Ongoing</span>
+          <h3>Generative AI for Learning: A Cross-Disciplinary Analysis of Student Attitudes and Outcomes</h3>
+          <p>Exploring the dynamic interplay of perceptions between students and faculty in academic contexts using qualitative and quantitative approaches.</p>
+        </div>
+        <div class="project-card fade-in">
+          <span class="project-status status-writing">Writing Results</span>
+          <h3>Predicting the Impact of Financial Stress on Student Academic Performance</h3>
+          <p>Study of 2,902 college students exploring financial stress impact using wrist sensors and machine learning (J48 and random forests), achieving up to 74% prediction accuracy.</p>
+        </div>
+        <div class="project-card fade-in">
+          <span class="project-status status-planning">Planning</span>
+          <h3>Faculty Perceptions of Striving for Prestige at Regional/State Comprehensive Universities</h3>
+          <p>Measuring faculty attitudes towards research activities at institutions recognized primarily for teaching excellence.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grants -->
+    <div style="margin-top: 56px;">
+      <p class="section-label">Funded Research</p>
+      <h2>Grants & <em>Funding</em></h2>
+      <div class="grants-grid" style="margin-top: 32px;">
+        <div class="grant-card fade-in">
+          <h3>RILE Connect: Scaling STEM Collaboration Platform</h3>
+          <p>Modernizing the Colorado STEM Ecosystem to a secure, open-source digital platform centralizing STEM opportunities, mentors, and funding across the state.</p>
+          <div class="grant-sponsor">Colorado SIPA · 2025–2027</div>
+        </div>
+        <div class="grant-card fade-in">
+          <h3>Mobile Application Development</h3>
+          <p>Developing a multifunctional app serving as a gateway to a visualization platform for mapping systems Kumu and facilitating matchmaking for the Colorado STEM Ecosystem.</p>
+          <div class="grant-sponsor">Colorado STEM Ecosystem · 2024</div>
+        </div>
+        <div class="grant-card fade-in">
+          <h3>OER Adoption Grant – AI & ML Open Textbook</h3>
+          <p>Created an accessible AI and Machine Learning OER with practical examples, visual explanations, and hands-on activities for introductory learners.</p>
+          <div class="grant-sponsor">MSU Denver · 2025</div>
+        </div>
+        <div class="grant-card fade-in">
+          <h3>Discussion Board Visualizing Tool</h3>
+          <p>Implemented a visualization tool for Canvas discussion boards to improve the student feedback system using learning analytics.</p>
+          <div class="grant-sponsor">MSU Denver Provost Grant · 2022</div>
+        </div>
+        <div class="grant-card fade-in">
+          <h3>Open Pedagogy OER Creation</h3>
+          <p>Creating OER materials for "Programming Concepts" to support underprepared students in introductory programming, co-created with three undergraduate female students.</p>
+          <div class="grant-sponsor">MSU Denver Open Roadrunner · 2021</div>
+        </div>
+        <div class="grant-card fade-in">
+          <h3>OER Adoption Grant</h3>
+          <p>Adopted OER resources enabling 88 students to complete courses without purchasing textbooks, reducing financial burden significantly.</p>
+          <div class="grant-sponsor">MSU Denver · 2020</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE -->
+<section id="service">
+  <div class="container">
+    <p class="section-label">Institutional & Community</p>
+    <h2>Service & <em>Leadership</em></h2>
+    <p class="section-intro">Active contributor to departmental, college, university, and community initiatives promoting STEM education and inclusivity.</p>
+
+    <div class="service-tabs">
+      <button class="tab-btn active" onclick="showTab('dept')">Department</button>
+      <button class="tab-btn" onclick="showTab('college')">College</button>
+      <button class="tab-btn" onclick="showTab('university')">University</button>
+      <button class="tab-btn" onclick="showTab('community')">Community</button>
+      <button class="tab-btn" onclick="showTab('professional')">Professional</button>
+    </div>
+
+    <div id="dept" class="service-content active">
+      <div class="service-list">
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">📚</div><div><h3>DSML 4360 Course Committee Chair</h3><p>Leading curriculum development, alignment with program outcomes, and assessment practices.</p><div class="service-period">August 2025–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">🔍</div><div><h3>Category II Search Committee</h3><p>Evaluating applications, developing interview questions, and recommending candidates. Successfully hired two lecturers.</p><div class="service-period">January 2024–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(196,97,74,0.1)">🖥️</div><div><h3>CS3210 / CS3600 / CS1400-2400 / CS1050-2050 Course Committees</h3><p>Tracking learning outcomes, coordinating curriculum across sections, and ensuring academic quality.</p><div class="service-period">2018–Present (various)</div></div></div>
+      </div>
+    </div>
+
+    <div id="college" class="service-content">
+      <div class="service-list">
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">📋</div><div><h3>CACED Curriculum Committee</h3><p>Reviewing and approving proposed changes to course offerings, degree programs, and academic policies at the college level.</p><div class="service-period">August 2024–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">🌈</div><div><h3>CHHS & CACED Diversity & Inclusivity Committee</h3><p>CS Department representative. Investigating and proposing strategies to increase inclusivity for diverse faculty, staff, and students.</p><div class="service-period">September 2023–July 2024</div></div></div>
+      </div>
+    </div>
+
+    <div id="university" class="service-content">
+      <div class="service-list">
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">⚡</div><div><h3>CASE Steering Committee</h3><p>Providing strategic guidance to the Center for Advanced STEM Education, promoting excellence and inclusive equity in STEM.</p><div class="service-period">August 2025–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">👩‍💻</div><div><h3>Women in STEM Committee Chair</h3><p>Leading initiatives promoting gender equity, professional development, and inclusive environment. Organizing scholarship events and conferences.</p><div class="service-period">August 2025–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(196,97,74,0.1)">🤖</div><div><h3>AI Empowerment in Higher Education Task Force</h3><p>Developed modules for a foundational AI course for MSU Denver's 2,500+ faculty, staff, and administrators.</p><div class="service-period">Summer 2025–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">📊</div><div><h3>DIGiT Task Force</h3><p>Defining data standards, reviewing data-related policies, and promoting best practices in data literacy.</p><div class="service-period">August 2024–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">🎓</div><div><h3>Student Success Implementation Team</h3><p>Working on first-year student retention improvement, reviewing enrollment trends and current programs.</p><div class="service-period">August 2024–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(196,97,74,0.1)">👩‍🏫</div><div><h3>Girls Who Code College Loops Faculty Advisor</h3><p>Supporting campus chapter of Girls Who Code, helping women in tech build belonging and community through weekly meetings.</p><div class="service-period">Fall 2022–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">🎓</div><div><h3>ACUE Facilitator</h3><p>Guided faculty through effective teaching practices, facilitating discussion, mentoring, and recognizing teaching improvements.</p><div class="service-period">September 2021–April 2022</div></div></div>
+      </div>
+    </div>
+
+    <div id="community" class="service-content">
+      <div class="service-list">
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">🏕️</div><div><h3>Girls Who Code Summer Camp Organizer</h3><p>Organized free coding camps for girls aged 13–18 (2022, 2023, 2024). Topics included AI, Data Science, creative coding, and MicroBit hardware. 2024 camp held at CS Department, AES250.</p><div class="service-period">2022–2024, Annual</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">🏫</div><div><h3>DSST: Cedar High School Internship Mentor</h3><p>Mentored three high school students on a Computer Science project. All three completed the internship successfully.</p><div class="service-period">September 2023–December 2023</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(196,97,74,0.1)">🤝</div><div><h3>AI Workforce Panel – Denver Economic Development</h3><p>"Navigating the AI Revolution" — Panel discussion for Workforce 50+ on AI's impact, guiding older individuals reentering the job market.</p><div class="service-period">December 2023</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">💡</div><div><h3>Women in Connectivity Insights Speaker (Charter)</h3><p>"Learning by Design: Thriving in a Fast-Moving Tech World" — interactive design thinking session for women in tech on AI-era upskilling.</p><div class="service-period">May 2025</div></div></div>
+      </div>
+    </div>
+
+    <div id="professional" class="service-content">
+      <div class="service-list">
+        <div class="service-item"><div class="service-icon" style="background:rgba(45,125,138,0.1)">📝</div><div><h3>SIGCSE Virtual 24 Paper Reviewer</h3><p>Reviewed four papers across Computing Education Research, Experience Reports and Tools, and Position and Curricula Initiative categories.</p><div class="service-period">May 2024–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(201,150,59,0.1)">🪑</div><div><h3>CCSC Rocky Mountain – Student Poster Chair</h3><p>Elected Student Poster Chair for CCSC Rocky Mountain 2024 conference. Managed submissions, display, and presentation logistics.</p><div class="service-period">November 2023–Present</div></div></div>
+        <div class="service-item"><div class="service-icon" style="background:rgba(196,97,74,0.1)">👥</div><div><h3>ACM SIGCSE Member</h3><p>Member of the world's largest educational and scientific computing society. Active in computing education research.</p><div class="service-period">December 2020–Present</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards" class="awards-section">
+  <div class="container">
+    <p class="section-label">Recognition</p>
+    <h2>Honors & <em>Awards</em></h2>
+    <p class="section-intro">Recognized for excellence in teaching, research, workforce development, and service to the MSU Denver community.</p>
+    <div class="awards-grid">
+      <div class="award-card fade-in">
+        <div class="award-icon">🏆</div>
+        <h3>Roadrunner SOAR Award</h3>
+        <p>MSU Denver's pinnacle individual award, celebrating employees who live the CADRE values and positively impact student success.</p>
+        <div class="award-year">April 2025 · MSU Denver</div>
+      </div>
+      <div class="award-card fade-in">
+        <div class="award-icon">🌟</div>
+        <h3>CACED Outstanding Faculty Award for Teaching</h3>
+        <p>Recognizing effectiveness of teaching practices via multiple modes: student ratings, peer recommendations, and assessment techniques.</p>
+        <div class="award-year">May 2025 · CACED College</div>
+      </div>
+      <div class="award-card fade-in">
+        <div class="award-icon">🎯</div>
+        <h3>Workforce Champion Award</h3>
+        <p>Recognizing outstanding contributions to workforce development by bridging academics and industry through first-ever industry-sponsored capstone courses with DeNOVO Solutions, DIA, and Jefferson County.</p>
+        <div class="award-year">August 2025 · MSU Denver Classroom to Career Hub</div>
+      </div>
+      <div class="award-card fade-in">
+        <div class="award-icon">🥇</div>
+        <h3>Outstanding Service Award</h3>
+        <p>Recognition for exceptional service to the Applied Sciences Division at the CHAS College.</p>
+        <div class="award-year">October 2022 · CHAS College</div>
+      </div>
+      <div class="award-card fade-in">
+        <div class="award-icon">📚</div>
+        <h3>Kappa Delta Pi Honor Society</h3>
+        <p>Initiated as a member for securing 3.9+ GPA in EdD program in Learning Analytics.</p>
+        <div class="award-year">February 2021 · KDP</div>
+      </div>
+      <div class="award-card fade-in">
+        <div class="award-icon">🎓</div>
+        <h3>3C Computing Fellow</h3>
+        <p>Selected for the Cultural Competence in Computing Fellows Program at Duke University, addressing DEI in computing environments.</p>
+        <div class="award-year">January 2024 · Duke University</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRAPH WORKS CTA STRIP -->
+<div class="page-link-strip">
+  <a href="graph-works.html">📊 Visit the Graph Works Gallery — Add and showcase your data visualizations ↗</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom:12px"><strong>Dr. Ranjidha Rajan</strong> · Assistant Professor of Computer Science</p>
+  <p>Metropolitan State University of Denver · Department of Computer Sciences</p>
+  <p style="margin-top: 16px; font-size: 0.82rem;">
+    <a href="/cdn-cgi/l/email-protection#0a78786b606b64784a67797f6e6f647c6f78246f6e7f"><span class="__cf_email__" data-cfemail="245656454e454a566449575140414a5241560a414051">[email&#160;protected]</span></a> ·
+    <a href="https://msudenver.gitbook.io/dr_reds_ai-and-ml/" target="_blank">OER Textbook ↗</a>
+  </p>
+  <p style="margin-top: 20px; font-size: 0.75rem; opacity: 0.5;">Portfolio Year 3 · MSU Denver Computer Sciences</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function showTab(id) {
+  document.querySelectorAll('.service-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Intersection Observer for fade-in
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// Active nav link
+const sections = document.querySelectorAll('section[id], div[id]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.
